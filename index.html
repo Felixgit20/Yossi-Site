@@ -182,7 +182,33 @@
             backface-visibility: hidden;
         }
 
+        #process .timeline-line,
+        #process .timeline-filler {
+            z-index: 1;
+            pointer-events: none;
+        }
+        #process .step-circle {
+            position: relative;
+            z-index: 10;
+        }
+        #process .step-circle.is-active {
+            border-color: #FF6B00;
+            box-shadow: 0 0 14px rgba(255, 107, 0, 0.45);
+        }
+        #process .step-circle.is-active i {
+            color: #FF6B00;
+            filter: drop-shadow(0 0 6px rgba(255, 107, 0, 0.6));
+        }
+
         @media (max-width: 768px) {
+            #about .site-container,
+            #process .site-container,
+            #services .site-container,
+            #contact .site-container {
+                max-width: 34rem;
+                margin-left: auto;
+                margin-right: auto;
+            }
             .hero-header {
                 height: 100svh;
                 min-height: 100svh;
@@ -206,6 +232,11 @@
             #about {
                 padding-top: 4rem;
                 padding-bottom: 4rem;
+            }
+            #about .text-right {
+                max-width: 30rem;
+                margin-left: auto;
+                margin-right: auto;
             }
             .about-visuals {
                 height: 340px;
@@ -236,7 +267,7 @@
             }
             #process .timeline-line,
             #process .timeline-filler {
-                right: 1.5rem !important;
+                right: 1.75rem !important;
                 left: auto !important;
                 transform: none !important;
                 z-index: 1;
@@ -245,18 +276,21 @@
             #process .process-step {
                 flex-direction: row;
                 align-items: flex-start;
-                direction: ltr;
+                direction: rtl;
+                opacity: 1 !important;
             }
             #process .process-step .step-circle {
-                order: 1;
+                order: 0;
                 z-index: 10;
             }
             #process .process-step .flex-1 {
-                order: 2;
+                order: 1;
                 width: 100%;
                 text-align: right;
                 padding-right: 0;
-                padding-left: 3.75rem;
+                padding-left: 0;
+                direction: rtl;
+                unicode-bidi: plaintext;
             }
             #process .process-step .flex-1.hidden {
                 display: none;
@@ -267,6 +301,7 @@
             }
             #process .step-circle i {
                 color: #6b7280;
+                opacity: 1;
                 transition: color 0.4s ease;
             }
             #process .step-circle.is-active {
@@ -275,6 +310,7 @@
             }
             #process .step-circle.is-active i {
                 color: #FF6B00;
+                filter: drop-shadow(0 0 6px rgba(255, 107, 0, 0.6));
             }
         }
     </style>
@@ -483,7 +519,7 @@
 
         <div class="site-container relative z-10">
             <div class="text-right mb-16">
-                <span class="block text-xs font-bold tracking-[0.2em] text-orange-500 mb-4 gs-reveal">שירותים</span>
+                <span class="block text-xs font-bold tracking-[0.2em] text-orange-500 mb-4 gs-reveal">מה אני מציע</span>
                 <h2 class="text-3xl md:text-5xl hebrew-heavy text-white gs-reveal">ארגז הכלים שלי</h2>
             </div>
             
@@ -899,6 +935,7 @@
                     start: "top 60%", // When step hits mid-screen
                     onEnter: () => {
                         gsap.to(step, { opacity: 1, duration: 0.5 });
+                        step.querySelector('.step-circle')?.classList.add('is-active');
                         const icon = step.querySelector('.step-circle');
                         const svg = step.querySelector('i');
                         if(icon) {
@@ -910,6 +947,7 @@
                     onLeaveBack: () => {
                         // Optional: fade out if scrolling back up
                         gsap.to(step, { opacity: 0.3, duration: 0.5 });
+                        step.querySelector('.step-circle')?.classList.remove('is-active');
                         const icon = step.querySelector('.step-circle');
                         const svg = step.querySelector('i');
                         if(icon) {
