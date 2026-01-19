@@ -217,6 +217,20 @@
             .contact-hud {
                 opacity: 0.08;
             }
+            #process .timeline-line,
+            #process .timeline-filler {
+                right: 1.5rem !important;
+                left: auto !important;
+                transform: none !important;
+            }
+            #process .process-step {
+                align-items: flex-end;
+            }
+            #process .process-step .flex-1 {
+                width: 100%;
+                text-align: right;
+                padding-right: 3.5rem;
+            }
         }
     </style>
 </head>
@@ -374,7 +388,7 @@
             </div>
 
             <div class="relative max-w-4xl mx-auto">
-                <div class="absolute right-[50%] md:right-8 top-0 bottom-0 w-[2px] bg-white/10 transform translate-x-[50%]"></div>
+                <div class="absolute right-[50%] md:right-8 top-0 bottom-0 w-[2px] bg-white/10 transform translate-x-[50%] timeline-line"></div>
                 <div class="absolute right-[50%] md:right-8 top-0 w-[2px] bg-gradient-to-b from-orange-500 to-orange-600 transform translate-x-[50%] timeline-filler h-0 shadow-[0_0_15px_rgba(255,107,0,0.8)]"></div>
 
                 <div class="space-y-12 relative">
