@@ -733,6 +733,8 @@
 
         function handleFormSubmit(e) {
             e.preventDefault();
+            const form = e.target;
+            const formData = new FormData(form);
             const contentDiv = document.getElementById('contact-content');
             
             // 1. Show Rocket (SVG)
@@ -749,11 +751,19 @@
             setTimeout(() => {
                 contentDiv.innerHTML = `
                     <div class="flex flex-col items-center justify-center h-full w-full text-center fade-in">
-                        <h3 class="text-3xl md:text-4xl font-bold text-white mb-6 leading-relaxed">אחזור אליכם<br>בהקדם האפשרי :)</h3>
+                        <h3 class="text-3xl md:text-4xl font-bold text-white mb-6 leading-relaxed">קיבלתי!<br>אחזור אליכם בקרוב :)</h3>
                     </div>
                 `;
                 
             }, 800);
+
+            fetch("/", {
+                method: "POST",
+                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                body: new URLSearchParams(formData).toString()
+            }).catch(() => {
+                // Keep the UI flow; errors can be checked in Netlify logs.
+            });
         }
 
         function closeModalAndReset() {
