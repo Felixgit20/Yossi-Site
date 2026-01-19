@@ -225,37 +225,37 @@
     <div class="ambient-light"></div>
 
     <!-- Navigation -->
-    <nav class="fixed top-0 w-full z-50 flex justify-center items-center pointer-events-none transition-all duration-300" id="navbar">
+    <nav class="fixed top-0 w-full z-50 flex justify-center items-center pointer-events-none transition-all duration-300 relative" id="navbar">
         <div class="site-container w-full py-6 flex justify-between items-center mix-blend-difference text-white pointer-events-auto">
-             <!-- LOGO (SVG) -->
-             <a href="#" class="group">
-                 <svg width="40" height="40" viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg" class="text-white group-hover:text-orange-400 transition-colors duration-300">
-                    <path d="M12 12L20 24V38" stroke="currentColor" stroke-width="2.5" stroke-linecap="square"/>
-                    <path d="M28 12L20 24" stroke="currentColor" stroke-width="2.5" stroke-linecap="square"/>
-                    <path d="M30 18V38H42" stroke="currentColor" stroke-width="2.5" stroke-linecap="square"/>
-                    <circle cx="45" cy="38" r="2.5" fill="#FF6B00" stroke="none"/>
-                 </svg>
-             </a>
-        
-            <div class="hidden md:flex gap-10">
-                <a href="#about" class="text-sm font-bold tracking-wide hover:text-orange-400 transition-colors">אודות</a>
-                <a href="#process" class="text-sm font-bold tracking-wide hover:text-orange-400 transition-colors">תהליך</a>
-                <a href="#services" class="text-sm font-bold tracking-wide hover:text-orange-400 transition-colors">שירותים</a>
-                <a href="#contact" class="text-sm font-bold tracking-wide hover:text-orange-400 transition-colors">צור קשר</a>
-            </div>
+            <div class="flex items-center gap-10">
+                <button id="mobile-menu-toggle" class="md:hidden text-white" aria-label="פתח תפריט" aria-expanded="false">
+                    <i data-lucide="menu" class="w-6 h-6"></i>
+                </button>
 
-            <button id="mobile-menu-toggle" class="md:hidden text-white" aria-label="פתח תפריט" aria-expanded="false">
-                <i data-lucide="menu" class="w-6 h-6"></i>
-            </button>
-        </div>
-        <div id="mobile-menu" class="md:hidden pointer-events-auto">
-            <div class="site-container">
-                <div class="mt-2 rounded-2xl border border-white/10 bg-black/80 backdrop-blur-md p-4 flex flex-col gap-3 text-right hidden">
+                <div class="hidden md:flex gap-10">
                     <a href="#about" class="text-sm font-bold tracking-wide hover:text-orange-400 transition-colors">אודות</a>
                     <a href="#process" class="text-sm font-bold tracking-wide hover:text-orange-400 transition-colors">תהליך</a>
                     <a href="#services" class="text-sm font-bold tracking-wide hover:text-orange-400 transition-colors">שירותים</a>
                     <a href="#contact" class="text-sm font-bold tracking-wide hover:text-orange-400 transition-colors">צור קשר</a>
                 </div>
+            </div>
+
+            <!-- LOGO (SVG) -->
+            <a href="#" class="group">
+                <svg width="40" height="40" viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg" class="text-white group-hover:text-orange-400 transition-colors duration-300">
+                    <path d="M12 12L20 24V38" stroke="currentColor" stroke-width="2.5" stroke-linecap="square"/>
+                    <path d="M28 12L20 24" stroke="currentColor" stroke-width="2.5" stroke-linecap="square"/>
+                    <path d="M30 18V38H42" stroke="currentColor" stroke-width="2.5" stroke-linecap="square"/>
+                    <circle cx="45" cy="38" r="2.5" fill="#FF6B00" stroke="none"/>
+                </svg>
+            </a>
+        </div>
+        <div id="mobile-menu" class="md:hidden pointer-events-auto absolute top-full right-6">
+            <div class="mt-2 rounded-2xl border border-white/10 bg-black/80 backdrop-blur-md p-4 flex flex-col gap-3 text-right hidden w-40">
+                <a href="#about" class="text-sm font-bold tracking-wide hover:text-orange-400 transition-colors">אודות</a>
+                <a href="#process" class="text-sm font-bold tracking-wide hover:text-orange-400 transition-colors">תהליך</a>
+                <a href="#services" class="text-sm font-bold tracking-wide hover:text-orange-400 transition-colors">שירותים</a>
+                <a href="#contact" class="text-sm font-bold tracking-wide hover:text-orange-400 transition-colors">צור קשר</a>
             </div>
         </div>
     </nav>
@@ -652,7 +652,7 @@
 
         // Mobile menu toggle
         const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
-        const mobileMenu = document.querySelector('#mobile-menu .site-container > div');
+        const mobileMenu = document.querySelector('#mobile-menu > div');
         const mobileMenuLinks = document.querySelectorAll('#mobile-menu a[href^="#"]');
 
         function closeMobileMenu() {
