@@ -164,6 +164,50 @@
         .fade-in {
             animation: fadeIn 0.5s ease-out forwards;
         }
+
+        @media (max-width: 768px) {
+            header {
+                height: 100svh;
+                min-height: 100svh;
+                padding-top: 4rem;
+            }
+            .hero-title {
+                font-size: clamp(2.5rem, 14vw, 4.5rem);
+            }
+            .hero-subtitle {
+                font-size: 0.75rem;
+                letter-spacing: 0.35em;
+            }
+            .hero-hebrew {
+                font-size: 1rem;
+                margin-top: 1rem;
+            }
+            #navbar .site-container {
+                padding-top: 1rem;
+                padding-bottom: 1rem;
+            }
+            #about {
+                padding-top: 4rem;
+                padding-bottom: 4rem;
+            }
+            .about-visuals {
+                height: 340px;
+            }
+            .about-visuals .anim-code {
+                top: 0.5rem;
+                right: 0.5rem;
+                left: auto;
+                width: 14rem;
+            }
+            .about-visuals .anim-card {
+                width: 16rem;
+                height: 18rem;
+            }
+            .about-visuals .anim-icon-1,
+            .about-visuals .anim-icon-2 {
+                opacity: 0.15;
+            }
+        }
     </style>
 </head>
 <body class="antialiased selection:bg-orange-500 selection:text-white">
@@ -231,7 +275,7 @@
         <div class="site-container w-full grid grid-cols-1 md:grid-cols-2 gap-4 items-center relative z-10">
             
             <!-- Right Side (Animated Visuals) -->
-            <div class="relative h-[500px] w-full flex items-center justify-center order-1 md:order-1 perspective-1000">
+            <div class="relative h-[500px] w-full flex items-center justify-center order-1 md:order-1 perspective-1000 about-visuals">
                 
                 <!-- Abstract Glow -->
                 <div class="absolute inset-0 bg-orange-500/5 blur-[60px] rounded-full scale-75 animate-pulse"></div>
