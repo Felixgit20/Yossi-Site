@@ -165,6 +165,23 @@
             animation: fadeIn 0.5s ease-out forwards;
         }
 
+        .hero-title,
+        .hero-subtitle,
+        .hero-hebrew {
+            will-change: transform, opacity;
+            transform: translateZ(0);
+        }
+        #hero-bg-img,
+        .anim-code,
+        .anim-card,
+        .anim-icon-1,
+        .anim-icon-2,
+        .service-card {
+            will-change: transform;
+            transform: translateZ(0);
+            backface-visibility: hidden;
+        }
+
         @media (max-width: 768px) {
             .hero-header {
                 height: 100svh;
@@ -635,7 +652,7 @@
     <script>
         lucide.createIcons();
         gsap.registerPlugin(ScrollTrigger);
-        ScrollTrigger.config({ ignoreMobileResize: true });
+        ScrollTrigger.config({ ignoreMobileResize: true, limitCallbacks: true });
 
         // Store the original form HTML to restore it after closing
         let originalFormHTML = '';
@@ -731,6 +748,10 @@
         });
 
         // Hero Animation
+        gsap.set(
+            ['.hero-title', '.hero-subtitle', '.hero-hebrew', '#hero-bg-img', '.anim-code', '.anim-card', '.anim-icon-1', '.anim-icon-2', '.service-card'],
+            { force3D: true }
+        );
         const tl = gsap.timeline();
         tl.to('.hero-title', { opacity: 1, duration: 1, ease: "power2.out", y: 0 })
           .to('.hero-subtitle', { opacity: 1, y: 0, duration: 0.8 }, "-=0.6")
@@ -775,15 +796,26 @@
             y: isMobile ? 40 : 100
         });
 
-        // Navbar Background on Scroll
-        window.addEventListener('scroll', () => {
-            const navbar = document.getElementById('navbar');
+        // Navbar Background on Scroll (rAF throttled for smoother scroll)
+        const navbar = document.getElementById('navbar');
+        let navbarTicking = false;
+        const updateNavbar = () => {
+            navbarTicking = false;
+            if (!navbar) return;
             if (window.scrollY > 50) {
                 navbar.classList.add('bg-[#0a0a0a]/90', 'backdrop-blur-md', 'border-b', 'border-white/5');
             } else {
                 navbar.classList.remove('bg-[#0a0a0a]/90', 'backdrop-blur-md', 'border-b', 'border-white/5');
             }
-        });
+        };
+        const requestNavbarUpdate = () => {
+            if (!navbarTicking) {
+                navbarTicking = true;
+                requestAnimationFrame(updateNavbar);
+            }
+        };
+        window.addEventListener('scroll', requestNavbarUpdate, { passive: true });
+        updateNavbar();
 
         // --- ANIMATIONS FOR DIGITAL CONSTRUCT ---
         
