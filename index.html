@@ -166,7 +166,7 @@
         }
 
         @media (max-width: 768px) {
-            header {
+            .hero-header {
                 height: 100svh;
                 min-height: 100svh;
                 padding-top: 4rem;
@@ -207,6 +207,16 @@
             .about-visuals .anim-icon-2 {
                 opacity: 0.15;
             }
+            #navbar .site-container {
+                mix-blend-mode: normal;
+            }
+            .glass-panel {
+                backdrop-filter: none;
+            }
+            .ambient-light,
+            .contact-hud {
+                opacity: 0.08;
+            }
         }
     </style>
 </head>
@@ -241,7 +251,7 @@
     </nav>
 
     <!-- Hero Section -->
-    <header class="relative w-full h-screen flex flex-col justify-center items-center overflow-hidden">
+    <header class="hero-header relative w-full min-h-[100svh] md:h-screen flex flex-col justify-center items-center overflow-hidden">
         <div class="absolute inset-0 z-0">
              <img src="https://imgur.com/L0k5skv.jpg" 
                   class="w-full h-full object-cover brightness-[0.6] contrast-110" 
@@ -573,6 +583,7 @@
     <script>
         lucide.createIcons();
         gsap.registerPlugin(ScrollTrigger);
+        ScrollTrigger.config({ ignoreMobileResize: true });
 
         // Store the original form HTML to restore it after closing
         let originalFormHTML = '';
@@ -675,15 +686,17 @@
             });
         });
 
+        const isMobile = window.matchMedia("(max-width: 768px)").matches;
+
         // Parallax background
         gsap.to("#hero-bg-img", {
             scrollTrigger: {
                 trigger: "header",
                 start: "top top",
                 end: "bottom top",
-                scrub: true
+                scrub: isMobile ? 0.2 : true
             },
-            y: 100
+            y: isMobile ? 40 : 100
         });
 
         // Navbar Background on Scroll
@@ -703,7 +716,7 @@
                 trigger: "#about",
                 start: "top bottom",
                 end: "bottom top",
-                scrub: 1
+                scrub: isMobile ? 0.2 : 1
             },
             y: -80,
             x: 20,
@@ -715,7 +728,7 @@
                 trigger: "#about",
                 start: "top bottom",
                 end: "bottom top",
-                scrub: 1
+                scrub: isMobile ? 0.2 : 1
             },
             scale: 1.1,
             rotation: 0, 
@@ -727,7 +740,7 @@
                 trigger: "#about",
                 start: "top bottom",
                 end: "bottom top",
-                scrub: 2
+                scrub: isMobile ? 0.3 : 2
             },
             y: 50,
             rotation: -45
@@ -738,7 +751,7 @@
                 trigger: "#about",
                 start: "top bottom",
                 end: "bottom top",
-                scrub: 1.5
+                scrub: isMobile ? 0.3 : 1.5
             },
             y: -60,
             rotation: 45
@@ -819,6 +832,10 @@
                 const speed = 1 + (self.progress * 2); // Speed up x3 when scrolling
                 gsap.to([".hud-ring-1", ".hud-ring-2"], { timeScale: speed, duration: 0.5 });
             }
+        });
+
+        window.addEventListener('load', () => {
+            ScrollTrigger.refresh();
         });
 
     </script>
