@@ -219,23 +219,46 @@
             }
             #process .timeline-line,
             #process .timeline-filler {
-                right: 2rem !important;
+                right: 1.5rem !important;
                 left: auto !important;
                 transform: none !important;
+                z-index: 1;
+                pointer-events: none;
             }
             #process .process-step {
-                flex-direction: row-reverse;
+                flex-direction: row;
                 align-items: flex-start;
+                direction: ltr;
+            }
+            #process .process-step .step-circle {
+                order: 1;
+                z-index: 10;
             }
             #process .process-step .flex-1 {
+                order: 2;
                 width: 100%;
                 text-align: right;
-                padding-right: 5rem;
+                padding-right: 0;
+                padding-left: 3.75rem;
             }
-        }
-
-        .timeline-filler.timeline-glow {
-            box-shadow: 0 0 16px rgba(255, 107, 0, 0.9);
+            #process .process-step .flex-1.hidden {
+                display: none;
+            }
+            #process .step-circle {
+                border-color: rgba(255, 255, 255, 0.2);
+                transition: border-color 0.4s ease, box-shadow 0.4s ease;
+            }
+            #process .step-circle i {
+                color: #6b7280;
+                transition: color 0.4s ease;
+            }
+            #process .step-circle.is-active {
+                border-color: #FF6B00;
+                box-shadow: 0 0 14px rgba(255, 107, 0, 0.45);
+            }
+            #process .step-circle.is-active i {
+                color: #FF6B00;
+            }
         }
     </style>
 </head>
@@ -824,54 +847,87 @@
         });
 
         // --- NEW TIMELINE ANIMATION ---
-        
-        // Fill the orange line on scroll
-        gsap.to(".timeline-filler", {
-            height: "100%",
-            scrollTrigger: {
-                trigger: "#process",
-                start: "top center",
-                end: "bottom center",
-                scrub: 0.5
-            }
-        });
-
-        // Reveal steps as they are passed
-        const steps = document.querySelectorAll('.process-step');
-        const timelineFiller = document.querySelector('.timeline-filler');
-        steps.forEach((step) => {
-            ScrollTrigger.create({
-                trigger: step,
-                start: "top 60%", // When step hits mid-screen
-                onEnter: () => {
-                    gsap.to(step, { opacity: 1, duration: 0.5 });
-                    if (timelineFiller) {
-                        timelineFiller.classList.add('timeline-glow');
-                        setTimeout(() => {
-                            timelineFiller.classList.remove('timeline-glow');
-                        }, 300);
-                    }
-                    const icon = step.querySelector('.step-circle');
-                    const svg = step.querySelector('i');
-                    if(icon) {
-                        icon.style.borderColor = "#FF6B00";
-                        icon.style.backgroundColor = "rgba(255,107,0,0.1)";
-                    }
-                    if(svg) svg.style.color = "#FF6B00";
-                },
-                onLeaveBack: () => {
-                    // Optional: fade out if scrolling back up
-                    gsap.to(step, { opacity: 0.3, duration: 0.5 });
-                    const icon = step.querySelector('.step-circle');
-                    const svg = step.querySelector('i');
-                    if(icon) {
-                        icon.style.borderColor = "rgba(255,255,255,0.2)";
-                        icon.style.backgroundColor = "#0a0a0a";
-                    }
-                    if(svg) svg.style.color = "#6b7280"; // gray-500
+        if (!isMobile) {
+            // Fill the orange line on scroll (desktop only)
+            gsap.to(".timeline-filler", {
+                height: "100%",
+                scrollTrigger: {
+                    trigger: "#process",
+                    start: "top center",
+                    end: "bottom center",
+                    scrub: 0.5
                 }
             });
-        });
+
+            // Reveal steps as they are passed (desktop only)
+            const steps = document.querySelectorAll('.process-step');
+            steps.forEach((step) => {
+                ScrollTrigger.create({
+                    trigger: step,
+                    start: "top 60%", // When step hits mid-screen
+                    onEnter: () => {
+                        gsap.to(step, { opacity: 1, duration: 0.5 });
+                        const icon = step.querySelector('.step-circle');
+                        const svg = step.querySelector('i');
+                        if(icon) {
+                            icon.style.borderColor = "#FF6B00";
+                            icon.style.backgroundColor = "rgba(255,107,0,0.1)";
+                        }
+                        if(svg) svg.style.color = "#FF6B00";
+                    },
+                    onLeaveBack: () => {
+                        // Optional: fade out if scrolling back up
+                        gsap.to(step, { opacity: 0.3, duration: 0.5 });
+                        const icon = step.querySelector('.step-circle');
+                        const svg = step.querySelector('i');
+                        if(icon) {
+                            icon.style.borderColor = "rgba(255,255,255,0.2)";
+                            icon.style.backgroundColor = "#0a0a0a";
+                        }
+                        if(svg) svg.style.color = "#6b7280"; // gray-500
+                    }
+                });
+            });
+        } else {
+            // Mobile-only vanilla timeline interaction
+            const processSection = document.getElementById('process');
+            const timelineTrack = processSection?.querySelector('.timeline-line');
+            const timelineFill = processSection?.querySelector('.timeline-filler');
+            const stepCircles = processSection?.querySelectorAll('.step-circle') || [];
+            let ticking = false;
+
+            const updateTimeline = () => {
+                ticking = false;
+                if (!processSection || !timelineTrack || !timelineFill || stepCircles.length === 0) return;
+                const trackRect = timelineTrack.getBoundingClientRect();
+                const lineTop = trackRect.top + window.scrollY;
+                const lineHeight = trackRect.height;
+                const progressPoint = window.scrollY + window.innerHeight * 0.55;
+                const fillHeight = Math.min(Math.max(progressPoint - lineTop, 0), lineHeight);
+                timelineFill.style.height = `${fillHeight}px`;
+
+                stepCircles.forEach((circle) => {
+                    const rect = circle.getBoundingClientRect();
+                    const centerY = rect.top + window.scrollY + rect.height / 2;
+                    if (lineTop + fillHeight >= centerY) {
+                        circle.classList.add('is-active');
+                    } else {
+                        circle.classList.remove('is-active');
+                    }
+                });
+            };
+
+            const requestUpdate = () => {
+                if (!ticking) {
+                    ticking = true;
+                    requestAnimationFrame(updateTimeline);
+                }
+            };
+
+            window.addEventListener('scroll', requestUpdate, { passive: true });
+            window.addEventListener('resize', requestUpdate);
+            updateTimeline();
+        }
 
         // --- CONTACT BACKGROUND ANIMATIONS ---
         
